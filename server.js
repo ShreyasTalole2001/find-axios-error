@@ -21,15 +21,18 @@ app.get('/', (req, res) => {
 app.get('/getPcrData', async (req, res) => {
     const url = "https://www.nseindia.com/api/option-chain-indices?symbol=NIFTY"
 
-    const agent = new https.Agent({
-        rejectUnauthorized: false, // Ignore SSL certificate errors
-    });
+    const headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.1234.567 Safari/537.36',
+        'Accept': 'application/json',
+    };
 
     try {
         const response = await axios.get(url,{
-            httpsAgent: agent,
+            httpsAgent: new https.Agent({ rejectUnauthorized: false }),
+            headers : headers,
+            timeout: 10000,
         });
-        res.send(response)
+        res.json(response.data)
     } catch (error) {
         console.log(error);
     }
